@@ -20,6 +20,7 @@ from io import StringIO
 from typing import TYPE_CHECKING, Any, Callable, Iterable, Iterator, Literal, Sequence, SupportsIndex, cast
 
 import numpy as np
+import pandas as pd
 from monty.dev import deprecated
 from monty.io import zopen
 from monty.json import MSONable
@@ -4510,3 +4511,79 @@ class StructureError(Exception):
 
 with open(os.path.join(os.path.dirname(__file__), "func_groups.json")) as file:
     FunctionalGroups = {k: Molecule(v["species"], v["coords"]) for k, v in json.load(file).items()}
+
+
+class StructureDF(Structure):
+    """
+    Structure as a dataframe.
+    """
+
+    __hash__ = None  # type: ignore
+
+    def __init__(
+        self,
+        lattice: ArrayLike | Lattice,
+        species: Sequence[CompositionLike],
+        coords: Sequence[ArrayLike],
+        charge: float | None = None,
+        validate_proximity: bool = False,
+        to_unit_cell: bool = False,
+        coords_are_cartesian: bool = False,
+        site_properties: dict | None = None,
+    ):
+        """
+        Create a periodic structure.
+
+        Args:
+            lattice: The lattice, either as a pymatgen.core.lattice.Lattice or
+                simply as any 2D array. Each row should correspond to a lattice
+                vector. E.g., [[10,0,0], [20,10,0], [0,0,30]] specifies a
+                lattice with lattice vectors [10,0,0], [20,10,0] and [0,0,30].
+            species: List of species on each site. Can take in flexible input,
+                including:
+
+                i.  A sequence of element / species specified either as string
+                    symbols, e.g. ["Li", "Fe2+", "P", ...] or atomic numbers,
+                    e.g., (3, 56, ...) or actual Element or Species objects.
+
+                ii. List of dict of elements/species and occupancies, e.g.,
+                    [{"Fe" : 0.5, "Mn":0.5}, ...]. This allows the setup of
+                    disordered structures.
+            coords (Nx3 array): list of fractional/cartesian coordinates of
+                each species.
+            charge (int): overall charge of the structure. Defaults to behavior
+                in SiteCollection where total charge is the sum of the oxidation
+                states.
+            validate_proximity (bool): Whether to check if there are sites
+                that are less than 0.01 Ang apart. Defaults to False.
+            to_unit_cell (bool): Whether to map all sites into the unit cell,
+                i.e., fractional coords between 0 and 1. Defaults to False.
+            coords_are_cartesian (bool): Set to True if you are providing
+                coordinates in Cartesian coordinates. Defaults to False.
+            site_properties (dict): Properties associated with the sites as a
+                dict of sequences, e.g., {"magmom":[5,5,5,5]}. The sequences
+                have to be the same length as the atomic species and
+                fractional_coords. Defaults to None for no properties.
+        """
+        self._lattice = lattice  # type: ignore
+        self._sites_df = pd.DataFrame(coords, columns=["a", "b", "c"])
+        self._charge = charge
+
+        def convert_sp(sp):
+            if not isinstance(sp, Composition):
+                try:
+                    sp = Composition({get_el_sp(sp): 1})
+                except TypeError:
+                    sp = Composition(sp)
+            return sp
+
+        self._sites_df["species"] = [convert_sp(s) for s in species]
+
+    def itersites(self):
+        for r in self._sites_df.iterrows():
+            r1 = r[1]
+            yield PeriodicSite(r1["species"], [r1["a"], r1["b"], r1["c"]], self._lattice)
+
+    @property
+    def sites(self):
+        return list(self.itersites())
