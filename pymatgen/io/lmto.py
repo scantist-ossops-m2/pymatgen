@@ -55,15 +55,11 @@ class LMTOCtrl:
         return self.get_string() == other.get_string()
 
     def __repr__(self):
-        """
-        Representation of the CTRL file is as a string.
-        """
+        """Representation of the CTRL file is as a string."""
         return self.get_string()
 
     def __str__(self):
-        """
-        String representation of the CTRL file.
-        """
+        """String representation of the CTRL file."""
         return self.get_string()
 
     def get_string(self, sigfigs=8):
@@ -378,19 +374,14 @@ class LMTOCopl:
 
             # This takes care of duplicate labels
             if label in cohp_data:
-                i = 1
-                lab = f"{label}-{i}"
+                idx = 1
+                lab = f"{label}-{idx}"
                 while lab in cohp_data:
-                    i += 1
-                    lab = f"{label}-{i}"
+                    idx += 1
+                    lab = f"{label}-{idx}"
                 label = lab
 
-            cohp_data[label] = {
-                "COHP": cohp,
-                "ICOHP": icohp,
-                "length": length,
-                "sites": sites,
-            }
+            cohp_data[label] = {"COHP": cohp, "ICOHP": icohp, "length": length, "sites": sites}
         self.cohp_data = cohp_data
 
     @staticmethod
