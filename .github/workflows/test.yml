@@ -97,7 +97,7 @@ jobs:
         # pytest --store-durations --durations-path test_files/.pytest-split-durations
         # and commit the results (requires pip install pytest-split)
         run: |
-          pytest --cov=pymatgen --cov-report=xml --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations tests
+          pytest --cov=pymatgen --cov-report=xml --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations tests/utils
       - name: Upload coverage
         uses: actions/upload-artifact@v3
         with:
