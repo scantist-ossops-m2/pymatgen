@@ -4,7 +4,7 @@ name: Tests
 
 on:
   push:
-    branches: [master]
+    branches: [master,cov-fix]
     paths-ignore: ["**/*.md", docs/**]
   pull_request:
     branches: [master]
