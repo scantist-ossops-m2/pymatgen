@@ -1,0 +1,3 @@
+fixes:
+  - "symmetry/::pymatgen/symmetry/"  # move path   e.g., "before/path" => "after/path"
+  - "util/::pymatgen/util/"  # move path   e.g., "before/path" => "after/path"
