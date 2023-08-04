@@ -84,7 +84,7 @@ jobs:
       - name: Combine coverage
         run: |
           pip install coverage
-          ls -la coverage-$i
+          ls -la coverage-1
           for i in {1..10}; do mv coverage-$i/.coverage .coverage.$i; rm -rf coverage-$i; done
           coverage combine
           coverage xml
