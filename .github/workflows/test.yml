@@ -84,7 +84,9 @@ jobs:
       - name: Combine coverage
         run: |
           pip install coverage
-          coverage combine coverage-*/*
+          for i in {1..10}; do mv coverage-$i/coverage.$i .coverage.$i; rm -rf coverage-$i; done
+          coverage combine
+          coverage xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
