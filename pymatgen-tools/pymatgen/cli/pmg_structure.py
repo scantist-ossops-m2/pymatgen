@@ -4,8 +4,8 @@
 
 from __future__ import annotations
 
-from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
 from pymatgen.core.structure import Structure
+from pymatgen.core.structure_matcher import ElementComparator, StructureMatcher
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tabulate import tabulate
 

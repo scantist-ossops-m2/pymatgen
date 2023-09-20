@@ -12,7 +12,6 @@ import unittest
 from shutil import which
 
 import pytest
-from pymatgen.analysis.bond_valence import BVAnalyzer
 from pymatgen.command_line.gulp_caller import (
     BuckinghamPotential,
     GulpCaller,
@@ -22,6 +21,7 @@ from pymatgen.command_line.gulp_caller import (
     get_energy_relax_structure_buckingham,
     get_energy_tersoff,
 )
+from pymatgen.core.bond_valence import BVAnalyzer
 from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.util.testing import TEST_FILES_DIR

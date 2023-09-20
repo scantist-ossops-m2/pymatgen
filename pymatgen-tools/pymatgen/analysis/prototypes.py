@@ -17,7 +17,7 @@ import os
 from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
-from pymatgen.analysis.structure_matcher import StructureMatcher
+from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.util.due import Doi, due
 
 if TYPE_CHECKING:

@@ -20,9 +20,9 @@ from typing import TYPE_CHECKING, Any, Literal, get_args
 import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
-from pymatgen.analysis.bond_valence import BV_PARAMS, BVAnalyzer
 from pymatgen.analysis.graphs import MoleculeGraph, StructureGraph
 from pymatgen.analysis.molecule_structure_comparator import CovalentRadius
+from pymatgen.core.bond_valence import BV_PARAMS, BVAnalyzer
 from pymatgen.core.periodic_table import Element, Species
 from pymatgen.core.sites import PeriodicSite, Site
 from pymatgen.core.structure import IStructure, PeriodicNeighbor, Structure

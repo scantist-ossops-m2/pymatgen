@@ -4,11 +4,11 @@ import unittest
 
 import numpy as np
 import pytest
-from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core.composition import Composition
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import DummySpecies, Element, Species
 from pymatgen.core.structure import Structure
+from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.cif import CifBlock, CifParser, CifWriter
 from pymatgen.io.vasp.inputs import Poscar

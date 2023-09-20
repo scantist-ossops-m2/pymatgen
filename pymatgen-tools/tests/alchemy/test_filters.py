@@ -11,10 +11,10 @@ from pymatgen.alchemy.filters import (
     SpecieProximityFilter,
 )
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import Species
 from pymatgen.core.structure import Structure
+from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.util.testing import TEST_FILES_DIR, PymatgenTest
 
 

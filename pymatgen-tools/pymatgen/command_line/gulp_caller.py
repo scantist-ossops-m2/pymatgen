@@ -10,7 +10,7 @@ import re
 import subprocess
 
 from monty.tempfile import ScratchDir
-from pymatgen.analysis.bond_valence import BVAnalyzer
+from pymatgen.core.bond_valence import BVAnalyzer
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import Element
 from pymatgen.core.structure import Structure

@@ -7,8 +7,8 @@ import warnings
 from typing import Literal
 
 import numpy as np
-from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core.spectrum import Spectrum
+from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from scipy.interpolate import interp1d
 

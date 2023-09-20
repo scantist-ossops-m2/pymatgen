@@ -21,7 +21,6 @@ from random import shuffle
 
 import numpy as np
 from numpy.linalg import norm, svd
-from pymatgen.analysis.bond_valence import BVAnalyzer
 from pymatgen.analysis.chemenv.coordination_environments.chemenv_strategies import MultiWeightsChemenvStrategy
 from pymatgen.analysis.chemenv.coordination_environments.coordination_geometries import (
     EXPLICIT_PERMUTATIONS,
@@ -41,6 +40,7 @@ from pymatgen.analysis.chemenv.utils.coordination_geometry_utils import (
     sort_separation,
     sort_separation_tuple,
 )
+from pymatgen.core.bond_valence import BVAnalyzer
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import Species
 from pymatgen.core.structure import Structure

@@ -7,8 +7,8 @@ from collections import defaultdict
 from typing import TYPE_CHECKING
 
 from monty.json import MSONable
-from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
 from pymatgen.core.periodic_table import get_el_sp
+from pymatgen.core.structure_matcher import ElementComparator, StructureMatcher
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 if TYPE_CHECKING:

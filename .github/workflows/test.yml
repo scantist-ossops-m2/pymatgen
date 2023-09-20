@@ -4,7 +4,7 @@ name: Tests
 
 on:
   push:
-    branches: [master]
+    branches: [master,core]
     paths-ignore: ["**/*.md", docs/**]
   pull_request:
     branches: [master]
@@ -99,7 +99,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip wheel
           python -m pip install numpy cython packaging
+          cd pymatgen-core
+          python -m pip install -e '.[dev,optional]'
+          cd ../pymatgen-tools
           python -m pip install -e '.[dev,optional]'
       - name: pytest split ${{ matrix.split }}
         run: |
-          pytest --splits 10 --group ${{ matrix.split }} --durations-path tests/files/.pytest-split-durations tests
+          pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-core/tests
+          pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-core/tests

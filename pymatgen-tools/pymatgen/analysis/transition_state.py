@@ -14,7 +14,7 @@ from glob import glob
 import matplotlib.pyplot as plt
 import numpy as np
 from monty.json import MSONable, jsanitize
-from pymatgen.analysis.structure_matcher import StructureMatcher
+from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.io.vasp import Outcar, Poscar
 from pymatgen.util.plotting import pretty_plot
 from scipy.interpolate import CubicSpline

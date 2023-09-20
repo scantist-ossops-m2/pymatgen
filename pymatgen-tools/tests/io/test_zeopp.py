@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from pymatgen.analysis.bond_valence import BVAnalyzer
+from pymatgen.core.bond_valence import BVAnalyzer
 from pymatgen.core.periodic_table import Species
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.vasp.inputs import Poscar
