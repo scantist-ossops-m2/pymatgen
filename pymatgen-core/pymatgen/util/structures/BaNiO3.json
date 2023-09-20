@@ -80,7 +80,7 @@
       "element": "Ba"
     }]
   }],
-  "@module": "pymatgen.alchemy.materials",
+  "@module": "pymatgen.core.structure",
   "lattice": {
     "a": 5.72260255,
     "c": 4.82718438,
@@ -95,13 +95,5 @@
     "gamma": 119.99999997697873,
     "alpha": 90.0
   },
-  "version": "1.0",
-  "other_parameters": {},
-  "last_modified": "2016-04-04 23:37:25.523406",
-  "@class": "TransformedStructure",
-  "history": [{
-    "source": "MaterialsProject",
-    "materialsid": "mp-19241",
-    "datetime": "2016-04-04 23:37:21.398414"
-  }]
+  "@class": "Structure"
 }

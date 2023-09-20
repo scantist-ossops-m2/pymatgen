@@ -4,8 +4,7 @@ from typing import Any
 
 # pymatgen.entries needs to be imported before pymatgen.util.typing
 # to avoid circular import.
-from pymatgen.entries import Entry
-from pymatgen.util.typing import CompositionLike, EntryLike, PathLike, SpeciesLike
+from pymatgen.util.typing import CompositionLike, PathLike, SpeciesLike
 
 # This module tests types are as expected and can be imported without circular ImportError.
 
@@ -16,24 +15,6 @@ __email__ = "janosh@lbl.gov"
 
 def _type_str(some_type: Any) -> str:
     return str(some_type).replace("typing.", "").replace("pymatgen.core.periodic_table.", "")
-
-
-def test_entry_like():
-    entries = (
-        "Entry",
-        "ComputedEntry",
-        "ComputedStructureEntry",
-        "PDEntry",
-        "ExpEntry",
-        "TransformedPDEntry",
-        "GrandPotPDEntry",
-        "CostEntry",
-        "GibbsComputedStructureEntry",
-    )
-    type_str = _type_str(EntryLike)
-    for entry in entries:
-        assert entry in type_str
-    assert Entry.__name__ in str(EntryLike)
 
 
 def test_species_like():

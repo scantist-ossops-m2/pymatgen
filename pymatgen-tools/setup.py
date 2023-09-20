@@ -6,7 +6,7 @@ import platform
 import sys
 
 import numpy as np
-from setuptools import Extension, find_namespace_packages, setup
+from setuptools import find_namespace_packages, setup
 
 is_win_64 = sys.platform.startswith("win") and platform.machine().endswith("64")
 extra_link_args = ["-Wl,--allow-multiple-definition"] if is_win_64 else []
@@ -23,26 +23,28 @@ long_description = (
 )
 
 setup(
-    name="pymatgen-core",
+    name="pymatgen-tools",
     packages=find_namespace_packages(
-        include=["pymatgen.*"],
+        include=["pymatgen.*", "pymatgen.analysis.*", "pymatgen.io.*", "pymatgen.ext.*", "cmd_line"],
     ),
     version="2023.9.10",
     python_requires=">=3.9",
     install_requires=[
-        "matplotlib>=1.5",
-        "monty>=3.0.2",
-        "numpy>=1.20.1",
-        "palettable>=3.1.1",
-        "requests",
-        "ruamel.yaml>=0.17.0",
-        "scipy>=1.5.0",
-        "spglib>=2.0.2",
-        "tabulate",
-        "tqdm",
-        "networkx>=2.2",
+        "pymatgen-core",
+        "mp-api>=0.27.3",
+        "pandas",
+        "plotly>=4.5.0",
+        "pybtex",
+        "sympy",
+        "joblib",
     ],
     extras_require={
+        "ase": ["ase>=3.3"],
+        "tblite": ["tblite[ase]>=0.3.0"],
+        "vis": ["vtk>=6.0.0"],
+        "abinit": ["netcdf4"],
+        "relaxation": ["matgl", "chgnet"],
+        "electronic_structure": ["fdint>=2.0.2"],
         "dev": [
             "black",
             "mypy",
@@ -57,14 +59,51 @@ setup(
             "sphinx_rtd_theme",
             "doc2dash",
         ],
+        "optional": [
+            "ase>=3.22.1",
+            # https://peps.python.org/pep-0508/#environment-markers
+            "BoltzTraP2>=22.3.2; platform_system!='Windows'",
+            "chemview>=0.6",
+            "chgnet",
+            "f90nml>=1.1.2",
+            "galore>=0.6.1",
+            "h5py>=3.8.0",
+            "jarvis-tools>=2020.7.14",
+            "matgl",
+            "netCDF4>=1.5.8",
+            "phonopy>=2.4.2",
+            "seekpath>=1.9.4",
+            "tblite[ase]>=0.3.0; platform_system=='Linux'",
+            # "hiphive>=0.6",
+            # "openbabel>=3.1.1; platform_system=='Linux'",
+        ],
+        "numba": [
+            "numba",
+        ],
     },
     # All package data has to be explicitly defined. Do not use automated codes like last time. It adds
     # all sorts of useless files like test files and is prone to path errors.
     package_data={
-        "pymatgen.core": ["*.json"],
+        "pymatgen.analysis": ["*.yaml", "*.json", "*.csv"],
+        "pymatgen.analysis.chemenv": [
+            "coordination_environments/coordination_geometries_files/*.json",
+            "coordination_environments/coordination_geometries_files/*.txt",
+            "coordination_environments/strategy_files/ImprovedConfidenceCutoffDefaultParameters.json",
+        ],
+        "pymatgen.analysis.structure_prediction": ["*.yaml", "data/*.json"],
+        "pymatgen.analysis.diffraction": ["*.json"],
+        "pymatgen.analysis.magnetism": ["default_magmoms.yaml"],
+        "pymatgen.analysis.solar": ["am1.5G.dat"],
+        "pymatgen.entries": ["*.json.gz", "*.yaml", "data/*.json"],
         "pymatgen": ["py.typed"],
+        "pymatgen.io.vasp": ["*.yaml", "*.json"],
+        "pymatgen.io.feff": ["*.yaml"],
+        "pymatgen.io.cp2k": ["*.yaml"],
+        "pymatgen.io.lobster": ["lobster_basis/*.yaml"],
+        "pymatgen.command_line": ["*"],
         "pymatgen.util": ["structures/*.json", "*.json"],
-        "pymatgen.symmetry": ["*.yaml", "*.json", "*.sqlite"],
+        "pymatgen.vis": ["*.yaml"],
+        "pymatgen.io.lammps": ["CoeffsDataType.yaml", "templates/*.template"],
     },
     author="Pymatgen Development Team",
     author_email="ongsp@ucsd.edu",
@@ -115,18 +154,13 @@ setup(
         "Topic :: Scientific/Engineering :: Physics",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    ext_modules=[
-        Extension(
-            "pymatgen.optimization.linear_assignment",
-            ["pymatgen/optimization/linear_assignment.pyx"],
-            extra_link_args=extra_link_args,
-        ),
-        Extension("pymatgen.util.coord_cython", ["pymatgen/util/coord_cython.pyx"], extra_link_args=extra_link_args),
-        Extension(
-            "pymatgen.optimization.neighbors",
-            ["pymatgen/optimization/neighbors.pyx"],
-            extra_link_args=extra_link_args,
-        ),
-    ],
+    entry_points={
+        "console_scripts": [
+            "pmg = pymatgen.cli.pmg:main",
+            "feff_plot_cross_section = pymatgen.cli.feff_plot_cross_section:main",
+            "feff_plot_dos = pymatgen.cli.feff_plot_dos:main",
+            "get_environment = pymatgen.cli.get_environment:main",
+        ]
+    },
     include_dirs=[np.get_include()],
 )
