@@ -80,9 +80,12 @@ isort.split-on-trailing-comma = false
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**" = ["D"]
+"pymatgen-core/tests/**" = ["D"]
+"pymatgen-tools/tests/**" = ["D"]
 "tasks.py" = ["D"]
 "pymatgen/analysis/*" = ["D"]
+"pymatgen-tools/pymatgen/analysis/bond_valence.py" = ["F403"]
+"pymatgen-tools/pymatgen/analysis/structure_matcher.py" = ["F403"]
 "pymatgen/vis/*" = ["D"]
 "pymatgen/io/*" = ["D"]
 "dev_scripts/*" = ["D"]
@@ -130,11 +133,12 @@ disable_error_code = "annotation-unchecked"
 [[tool.mypy.overrides]]
 module = ["requests.*", "tabulate.*"]
 ignore_missing_imports = true
+explicit_package_bases = true
 
 [tool.codespell]
 ignore-words-list = """
 titel,alls,ans,nd,mater,nwo,te,hart,ontop,ist,ot,fo,nax,coo,coul,ser,leary,thre,
 fase,rute,reson,titels,ges,scalr,strat,struc,hda,nin,ons,pres,kno,loos,lamda,lew
 """
-skip = "pymatgen/analysis/aflow_prototypes.json"
+skip = "pymatgen-tools/pymatgen/analysis/aflow_prototypes.json"
 check-filenames = true

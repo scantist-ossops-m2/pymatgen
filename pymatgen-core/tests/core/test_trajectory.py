@@ -419,6 +419,7 @@ class TestTrajectory(PymatgenTest):
         assert len(self.traj_mols) == len(self.molecules)
 
     def test_displacements(self):
+        Poscar = pytest.importorskip("pymatgen.io.vasp.inputs.Poscar")
         poscar = Poscar.from_file(f"{TEST_FILES_DIR}/POSCAR")
         structures = [poscar.structure]
         displacements = np.zeros((11, *np.shape(structures[-1].frac_coords)))

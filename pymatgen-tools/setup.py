@@ -2,14 +2,8 @@
 
 from __future__ import annotations
 
-import platform
-import sys
-
 import numpy as np
 from setuptools import find_namespace_packages, setup
-
-is_win_64 = sys.platform.startswith("win") and platform.machine().endswith("64")
-extra_link_args = ["-Wl,--allow-multiple-definition"] if is_win_64 else []
 
 with open("README.md") as file:
     long_description = file.read()
@@ -29,15 +23,7 @@ setup(
     ),
     version="2023.9.10",
     python_requires=">=3.9",
-    install_requires=[
-        "pymatgen-core",
-        "mp-api>=0.27.3",
-        "pandas",
-        "plotly>=4.5.0",
-        "pybtex",
-        "sympy",
-        "joblib",
-    ],
+    install_requires=["pymatgen-core", "pandas", "plotly>=4.5.0", "pybtex", "sympy", "joblib", "uncertainties"],
     extras_require={
         "ase": ["ase>=3.3"],
         "tblite": ["tblite[ase]>=0.3.0"],
