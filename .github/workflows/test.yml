@@ -106,4 +106,4 @@ jobs:
       - name: pytest split ${{ matrix.split }}
         run: |
           pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-core/tests
-          pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-core/tests
+          pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-tools/tests
