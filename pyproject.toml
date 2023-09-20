@@ -7,6 +7,60 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = []
+
+[project]
+name = "pymatgen"
+authors = [
+    {name = "Pymatgen Development Team", email = "ongsp@ucsd.edu"},
+]
+description = '''
+Python Materials Genomics is a robust materials
+analysis code that defines core object representations for
+structures and molecules with support for many electronic
+structure codes. It is currently the core analysis code
+powering the Materials Project (https://materialsproject.org).
+'''
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = [
+        "ABINIT",
+        "analysis",
+        "crystal",
+        "diagrams",
+        "electronic",
+        "gaussian",
+        "materials",
+        "nwchem",
+        "phase",
+        "project",
+        "qchem",
+        "science",
+        "structure",
+        "VASP",
+    ]
+license = {text = "MIT"}
+classifiers = [
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3",
+        "Topic :: Scientific/Engineering :: Chemistry",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Topic :: Scientific/Engineering :: Physics",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ]
+dependencies = [
+    "pymatgen-core",
+    "pymatgen-tools",
+]
+dynamic = ["version"]
+
 [tool.versioningit.vcs]
 method = "git"
 default-tag = "0.0.1"
