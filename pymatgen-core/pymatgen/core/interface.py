@@ -6,7 +6,6 @@ from itertools import chain, combinations, product
 
 import numpy as np
 from numpy.testing import assert_allclose
-from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.sites import PeriodicSite
 from pymatgen.core.structure import Site, Structure
@@ -200,6 +199,8 @@ class Interface(Structure):
             tolerance: tolerance for "uniqueness" for shifts in Cartesian unit
                 This is usually Angstroms.
         """
+        from pymatgen.analysis.adsorption import AdsorbateSiteFinder
+
         substrate, film = self.substrate, self.film
 
         substrate_surface_sites = np.dot(

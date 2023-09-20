@@ -15,7 +15,6 @@ import numpy as np
 from monty.io import zopen
 from monty.json import MSONable
 from pymatgen.core.structure import Composition, DummySpecies, Element, Lattice, Molecule, Species, Structure
-from pymatgen.io.vasp.outputs import Vasprun, Xdatcar
 
 __author__ = "Eric Sivonxay, Shyam Dwaraknath, Mingjian Wen, Evan Spotte-Smith"
 __version__ = "0.1"
@@ -536,6 +535,8 @@ class Trajectory(MSONable):
         Returns:
             A trajectory from the file.
         """
+        from pymatgen.io.vasp.outputs import Vasprun, Xdatcar
+
         fname = Path(filename).expanduser().resolve().name
 
         if fnmatch(fname, "*XDATCAR*"):
