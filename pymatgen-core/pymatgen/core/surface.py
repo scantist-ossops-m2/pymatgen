@@ -21,10 +21,13 @@ import os
 import warnings
 from functools import reduce
 from math import gcd
-from typing import Literal
+from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.fractions import lcm
+from scipy.cluster.hierarchy import fcluster, linkage
+from scipy.spatial.distance import squareform
+
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import get_el_sp
 from pymatgen.core.sites import PeriodicSite
@@ -33,8 +36,9 @@ from pymatgen.core.structure_matcher import StructureMatcher
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.util.coord import in_coord_list
 from pymatgen.util.due import Doi, due
-from scipy.cluster.hierarchy import fcluster, linkage
-from scipy.spatial.distance import squareform
+
+if TYPE_CHECKING:
+    from pymatgen.symmetry.groups import CrystalSystem
 
 __author__ = "Richard Tran, Wenhao Sun, Zihan Xu, Shyue Ping Ong"
 
@@ -92,7 +96,7 @@ class Slab(Structure):
 
         Args:
             lattice (Lattice/3x3 array): The lattice, either as a
-                :class:`pymatgen.core.lattice.Lattice` or
+                pymatgen.core.Lattice or
                 simply as any 2D array. Each row should correspond to a lattice
                 vector. E.g., [[10,0,0], [20,10,0], [0,0,30]] specifies a
                 lattice with lattice vectors [10,0,0], [20,10,0] and [0,0,30].
@@ -1519,8 +1523,7 @@ def get_symmetrically_equivalent_miller_indices(
     structure,
     miller_index,
     return_hkil=True,
-    system: Literal["triclinic", "monoclinic", "orthorhombic", "tetragonal", "trigonal", "hexagonal", "cubic"]
-    | None = None,
+    system: CrystalSystem | None = None,
 ):
     """Returns all symmetrically equivalent indices for a given structure. Analysis
     is based on the symmetry of the reciprocal lattice of the structure.
@@ -1537,8 +1540,8 @@ def get_symmetrically_equivalent_miller_indices(
     # Change to hkl if hkil because in_coord_list only handles tuples of 3
     miller_index = (miller_index[0], miller_index[1], miller_index[3]) if len(miller_index) == 4 else miller_index
     mmi = max(np.abs(miller_index))
-    r = list(range(-mmi, mmi + 1))
-    r.reverse()
+    rng = list(range(-mmi, mmi + 1))
+    rng.reverse()
 
     sg = None
     if not system:
@@ -1555,7 +1558,7 @@ def get_symmetrically_equivalent_miller_indices(
         symm_ops = structure.lattice.get_recp_symmetry_operation()
 
     equivalent_millers = [miller_index]
-    for miller in itertools.product(r, r, r):
+    for miller in itertools.product(rng, rng, rng):
         if miller == miller_index:
             continue
         if any(i != 0 for i in miller):

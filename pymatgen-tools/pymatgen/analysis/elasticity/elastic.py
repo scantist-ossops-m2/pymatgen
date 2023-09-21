@@ -104,24 +104,16 @@ class NthOrderElasticTensor(Tensor):
         return cls(diff_fit(strains, stresses, eq_stress, order, tol)[order - 2])
 
 
-def raise_error_if_unphysical(f):
+def raise_if_unphysical(func):
     """
     Wrapper for functions or properties that should raise an error
     if tensor is unphysical.
     """
 
     def wrapper(self, *args, **kwargs):
-        """
-        Args:
-            self ():
-            *args ():
-            **kwargs ():
-
-        Returns:
-        """
         if self.k_vrh < 0 or self.g_vrh < 0:
             raise ValueError("Bulk or shear modulus is negative, property cannot be determined")
-        return f(self, *args, **kwargs)
+        return func(self, *args, **kwargs)
 
     return wrapper
 
@@ -228,7 +220,7 @@ class ElasticTensor(NthOrderElasticTensor):
         n = get_uvec(n)
         return self.einsum_sequence([n] * 4)
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def trans_v(self, structure: Structure):
         """
         Calculates transverse sound velocity (in SI units) using the
@@ -237,7 +229,8 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: transverse sound velocity (in SI units)
+        Returns:
+            float: transverse sound velocity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
@@ -248,7 +241,7 @@ class ElasticTensor(NthOrderElasticTensor):
             raise ValueError("k_vrh or g_vrh is negative, sound velocity is undefined")
         return (1e9 * self.g_vrh / mass_density) ** 0.5
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def long_v(self, structure: Structure):
         """
         Calculates longitudinal sound velocity (in SI units)
@@ -257,7 +250,8 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: longitudinal sound velocity (in SI units)
+        Returns:
+            float: longitudinal sound velocity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
@@ -268,7 +262,7 @@ class ElasticTensor(NthOrderElasticTensor):
             raise ValueError("k_vrh or g_vrh is negative, sound velocity is undefined")
         return (1e9 * (self.k_vrh + 4 / 3 * self.g_vrh) / mass_density) ** 0.5
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def snyder_ac(self, structure: Structure):
         """
         Calculates Snyder's acoustic sound velocity (in SI units).
@@ -276,7 +270,8 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: Snyder's acoustic sound velocity (in SI units)
+        Returns:
+            float: Snyder's acoustic sound velocity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
@@ -291,15 +286,16 @@ class ElasticTensor(NthOrderElasticTensor):
             / (300 * num_density ** (-2 / 3) * n_sites ** (1 / 3))
         )
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def snyder_opt(self, structure: Structure):
         """
         Calculates Snyder's optical sound velocity (in SI units).
 
         Args:
-            structure: pymatgen structure object
+            structure: pymatgen Structure object
 
-        Returns: Snyder's optical sound velocity (in SI units)
+        Returns:
+            float: Snyder's optical sound velocity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
@@ -312,7 +308,7 @@ class ElasticTensor(NthOrderElasticTensor):
             * (1 - n_sites ** (-1 / 3))
         )
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def snyder_total(self, structure: Structure):
         """
         Calculates Snyder's total sound velocity (in SI units).
@@ -320,11 +316,12 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: Snyder's total sound velocity (in SI units)
+        Returns:
+            float: Snyder's total sound velocity (in SI units)
         """
         return self.snyder_ac(structure) + self.snyder_opt(structure)
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def clarke_thermalcond(self, structure: Structure):
         """
         Calculates Clarke's thermal conductivity (in SI units).
@@ -332,7 +329,8 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: Clarke's thermal conductivity (in SI units)
+        Returns:
+            float: Clarke's thermal conductivity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
@@ -343,7 +341,7 @@ class ElasticTensor(NthOrderElasticTensor):
         mass_density = 1.6605e3 * n_sites * weight / (n_atoms * volume)
         return 0.87 * 1.3806e-23 * avg_mass ** (-2 / 3) * mass_density ** (1 / 6) * self.y_mod**0.5
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def cahill_thermalcond(self, structure: Structure):
         """
         Calculates Cahill's thermal conductivity (in SI units).
@@ -351,23 +349,25 @@ class ElasticTensor(NthOrderElasticTensor):
         Args:
             structure: pymatgen structure object
 
-        Returns: Cahill's thermal conductivity (in SI units)
+        Returns:
+            float: Cahill's thermal conductivity (in SI units)
         """
         n_sites = len(structure)
         volume = structure.volume
         num_density = 1e30 * n_sites / volume
         return 1.3806e-23 / 2.48 * num_density ** (2 / 3) * (self.long_v(structure) + 2 * self.trans_v(structure))
 
-    @raise_error_if_unphysical
+    @raise_if_unphysical
     def debye_temperature(self, structure: Structure):
         """
-        Estimates the debye temperature from longitudinal and
+        Estimates the Debye temperature from longitudinal and
         transverse sound velocities.
 
         Args:
             structure: pymatgen structure object
 
-        Returns: debye temperature (in SI units)
+        Returns:
+            float: debye temperature (in SI units)
         """
         v0 = structure.volume * 1e-30 / len(structure)
         vl, vt = self.long_v(structure), self.trans_v(structure)
@@ -466,7 +466,8 @@ class ElasticTensor(NthOrderElasticTensor):
     @classmethod
     def from_independent_strains(cls, strains, stresses, eq_stress=None, vasp=False, tol: float = 1e-10):
         """
-        Constructs the elastic tensor least-squares fit of independent strains
+        Constructs the elastic tensor least-squares fit of independent strains.
+
         Args:
             strains (list of Strains): list of strain objects to fit
             stresses (list of Stresses): list of stress objects to use in fit
@@ -944,7 +945,7 @@ def get_strain_state_dict(strains, stresses, eq_stress=None, tol: float = 1e-10,
     for ind in independent:
         # match strains with templates
         template = np.zeros(6, dtype=bool)
-        np.put(template, ind, True)
+        np.put(template, ind, v=True)
         template = np.tile(template, [vstresses.shape[0], 1])
         mode = (template == (np.abs(vstrains) > 1e-10)).all(axis=1)
         mstresses = vstresses[mode]
@@ -968,8 +969,7 @@ def get_strain_state_dict(strains, stresses, eq_stress=None, tol: float = 1e-10,
 
 
 def generate_pseudo(strain_states, order=3):
-    """
-    Generates the pseudo-inverse for a given set of strains.
+    """Generates the pseudo-inverse for a given set of strains.
 
     Args:
         strain_states (6xN array like): a list of voigt-notation

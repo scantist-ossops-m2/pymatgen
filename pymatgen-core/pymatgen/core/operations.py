@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from monty.json import MSONable
+
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.util.due import Doi, due
 from pymatgen.util.string import transformation_to_string
@@ -92,12 +93,7 @@ class SymmOp(MSONable):
         return f"{type(self).__name__}({affine_matrix=})"
 
     def __str__(self) -> str:
-        output = [
-            "Rot:",
-            str(self.affine_matrix[0:3][:, 0:3]),
-            "tau",
-            str(self.affine_matrix[0:3][:, 3]),
-        ]
+        output = ["Rot:", str(self.affine_matrix[0:3][:, 0:3]), "tau", str(self.affine_matrix[0:3][:, 3])]
         return "\n".join(output)
 
     def operate(self, point: ArrayLike) -> np.ndarray:
@@ -139,7 +135,7 @@ class SymmOp(MSONable):
         full form, not the Voigt form.
 
         Args:
-            tensor (numpy array): a rank n tensor
+            tensor (numpy array): A rank n tensor
 
         Returns:
             Transformed tensor.
@@ -162,16 +158,12 @@ class SymmOp(MSONable):
         Args:
             point_a (3x1 array): First point.
             point_b (3x1 array): Second point.
-            tol (float): Absolute tolerance for checking distance.
+            tol (float): Absolute tolerance for checking distance. Defaults to 0.001.
 
         Returns:
-            True if self.operate(point_a) == point_b or vice versa.
+            bool: True if self.operate(point_a) == point_b or vice versa.
         """
-        if np.allclose(self.operate(point_a), point_b, atol=tol):
-            return True
-        if np.allclose(self.operate(point_b), point_a, atol=tol):
-            return True
-        return False
+        return any(np.allclose(self.operate(p1), p2, atol=tol) for p1, p2 in [(point_a, point_b), (point_b, point_a)])
 
     def are_symmetrically_related_vectors(
         self,

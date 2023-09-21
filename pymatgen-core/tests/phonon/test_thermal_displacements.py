@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.testing import assert_allclose
+from pytest import approx
+
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
 from pymatgen.util.testing import TEST_FILES_DIR, PymatgenTest
-from pytest import approx
 
 
 class TestThermalDisplacement(PymatgenTest):
@@ -94,7 +95,7 @@ class TestThermalDisplacement(PymatgenTest):
             ],
         )
 
-    def test_Ucart(self):
+    def test_ucart(self):
         assert self.thermal.thermal_displacement_matrix_cart[0][0] == approx(0.00516)
         # U11, U22, U33, U23, U13, U12
         assert_allclose(
@@ -108,10 +109,10 @@ class TestThermalDisplacement(PymatgenTest):
             5,
         )
 
-    def test_U1U2U3(self):
+    def test_u1_u2_u3(self):
         assert self.thermal.U1U2U3[0].sort() == approx(np.array([2.893872e-03, 5.691239e-03, 6.854889e-03]).sort())
 
-    def test_Ustar(self):
+    def test_ustar(self):
         Ustar = self.thermal.Ustar
         assert_allclose(
             Ustar[0],
@@ -121,7 +122,7 @@ class TestThermalDisplacement(PymatgenTest):
             5,
         )
 
-    def test_Ucif(self):
+    def test_ucif(self):
         Ucif = self.thermal.Ucif
         assert_allclose(
             Ucif[0],
@@ -131,7 +132,7 @@ class TestThermalDisplacement(PymatgenTest):
             5,
         )
 
-    def test_B(self):
+    def test_b(self):
         B = self.thermal.B
         assert_allclose(
             B[0],
@@ -304,7 +305,7 @@ class TestThermalDisplacement(PymatgenTest):
                 printed = True
         assert printed
 
-    def test_from_cif_P1(self):
+    def test_from_cif_p1(self):
         self.thermal.write_cif(f"{self.tmp_path}/U.cif")
         new_thermals = ThermalDisplacementMatrices.from_cif_P1(f"{self.tmp_path}/U.cif")
         assert_allclose(new_thermals[0].thermal_displacement_matrix_cif_matrixform, self.thermal.Ucif)

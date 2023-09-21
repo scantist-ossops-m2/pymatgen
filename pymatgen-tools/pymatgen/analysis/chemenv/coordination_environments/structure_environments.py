@@ -45,8 +45,7 @@ class StructureEnvironments(MSONable):
         """Class used to store a given set of neighbors of a given site (based on the detailed_voronoi)."""
 
         def __init__(self, structure: Structure, isite, detailed_voronoi, site_voronoi_indices, sources=None):
-            """
-            Constructor for NeighborsSet.
+            """Constructor for NeighborsSet.
 
             Args:
                 structure: Structure object.
@@ -72,13 +71,13 @@ class StructureEnvironments(MSONable):
                 self.sources = [sources]
 
         def get_neighb_voronoi_indices(self, permutation):
-            """
-            Return the indices in the detailed_voronoi corresponding to the current permutation.
+            """Get indices in the detailed_voronoi corresponding to the current permutation.
 
             Args:
                 permutation: Current permutation for which the indices in the detailed_voronoi are needed.
 
-            Returns: List of indices in the detailed_voronoi.
+            Returns:
+                list[int]: indices in the detailed_voronoi.
             """
             return [self.site_voronoi_indices[ii] for ii in permutation]
 
@@ -285,8 +284,7 @@ class StructureEnvironments(MSONable):
                 ia1 = a1_indices[0]
                 ia2 = a2_indices[0]
                 for id_ia in [(id1, ia1), (id1, ia2), (id2, ia1), (id2, ia2)]:
-                    if id_ia not in points_dict:
-                        points_dict[id_ia] = 0
+                    points_dict.setdefault(id_ia, 0)
                     points_dict[id_ia] += 1
 
             new_pts = []
@@ -324,8 +322,8 @@ class StructureEnvironments(MSONable):
         @property
         def source(self):
             """
-            Returns the source of this NeighborsSet (how it was generated, e.g. from which Voronoi cut-offs, or from
-            hints).
+            Returns the source of this NeighborsSet (how it was generated, e.g. from which Voronoi
+            cutoffs, or from hints).
             """
             if len(self.sources) != 1:
                 raise RuntimeError("Number of sources different from 1 !")
@@ -369,7 +367,7 @@ class StructureEnvironments(MSONable):
             }
 
         @classmethod
-        def from_dict(cls, dd, structure: Structure, detailed_voronoi):
+        def from_dict(cls, dct, structure: Structure, detailed_voronoi):
             """
             Reconstructs the NeighborsSet algorithm from its JSON-serializable dict representation, together with
             the structure and the DetailedVoronoiContainer.
@@ -379,19 +377,20 @@ class StructureEnvironments(MSONable):
             reconstructing itself. These two are both in the StructureEnvironments object.
 
             Args:
-                dd: a JSON-serializable dict representation of a NeighborsSet.
+                dct: a JSON-serializable dict representation of a NeighborsSet.
                 structure: The structure.
                 detailed_voronoi: The Voronoi object containing all the neighboring atoms from which the subset of
                     neighbors for this NeighborsSet is extracted.
 
-            Returns: a NeighborsSet.
+            Returns:
+                NeighborsSet
             """
             return cls(
                 structure=structure,
-                isite=dd["isite"],
+                isite=dct["isite"],
                 detailed_voronoi=detailed_voronoi,
-                site_voronoi_indices=dd["site_voronoi_indices"],
-                sources=dd["sources"],
+                site_voronoi_indices=dct["site_voronoi_indices"],
+                sources=dct["sources"],
             )
 
     def __init__(
@@ -583,7 +582,8 @@ class StructureEnvironments(MSONable):
             cn: Coordination for which the ChemicalEnvironments is looked for.
             nb_set: Neighbors set for which the ChemicalEnvironments is looked for.
 
-        Returns: a ChemicalEnvironments object.
+        Returns:
+            ChemicalEnvironments
         """
         if self.ce_list[isite] is None:
             return None
@@ -603,7 +603,8 @@ class StructureEnvironments(MSONable):
             isite: Index of the site.
             mp_symbol: Symbol of the coordination environment for which we want the continuous symmetry measure.
 
-        Returns: Continuous symmetry measure of the given site in the given environment.
+        Returns:
+            Continuous symmetry measure of the given site in the given environment.
         """
         csms = self.get_csms(isite, mp_symbol)
         if len(csms) != 1:
@@ -614,7 +615,7 @@ class StructureEnvironments(MSONable):
             )
         return csms[0]
 
-    def get_csms(self, isite, mp_symbol):
+    def get_csms(self, isite, mp_symbol) -> list:
         """
         Returns the continuous symmetry measure(s) of site with index isite with respect to the
         perfect coordination environment with mp_symbol. For some environments, a given mp_symbol might not
@@ -628,7 +629,7 @@ class StructureEnvironments(MSONable):
             mp_symbol: MP symbol of the perfect environment for which the csm has to be given.
 
         Returns:
-            List of csms for site isite with respect to geometry mp_symbol
+            list[CSM]: for site isite with respect to geometry mp_symbol
         """
         cn = symbol_cn_mapping[mp_symbol]
         if cn not in self.ce_list[isite]:
@@ -1383,8 +1384,7 @@ class LightStructureEnvironments(MSONable):
         """
 
         def __init__(self, structure: Structure, isite, all_nbs_sites, all_nbs_sites_indices):
-            """
-            Constructor for NeighborsSet.
+            """Constructor for NeighborsSet.
 
             Args:
                 structure: Structure object.
@@ -1462,7 +1462,7 @@ class LightStructureEnvironments(MSONable):
             }
 
         @classmethod
-        def from_dict(cls, dd, structure: Structure, all_nbs_sites):
+        def from_dict(cls, dct, structure: Structure, all_nbs_sites):
             """
             Reconstructs the NeighborsSet algorithm from its JSON-serializable dict representation, together with
             the structure and all the possible neighbors sites.
@@ -1472,17 +1472,18 @@ class LightStructureEnvironments(MSONable):
             reconstructing itself. These two are both in the LightStructureEnvironments object.
 
             Args:
-                dd: a JSON-serializable dict representation of a NeighborsSet.
+                dct: a JSON-serializable dict representation of a NeighborsSet.
                 structure: The structure.
                 all_nbs_sites: The list of all the possible neighbors for a given site.
 
-            Returns: a NeighborsSet.
+            Returns:
+                NeighborsSet
             """
             return cls(
                 structure=structure,
-                isite=dd["isite"],
+                isite=dct["isite"],
                 all_nbs_sites=all_nbs_sites,
-                all_nbs_sites_indices=dd["all_nbs_sites_indices"],
+                all_nbs_sites_indices=dct["all_nbs_sites_indices"],
             )
 
     def __init__(
@@ -1529,7 +1530,8 @@ class LightStructureEnvironments(MSONable):
             valences_origin: How the valences were obtained (e.g. from the Bond-valence analysis or from the original
                 structure).
 
-        Returns: a LightStructureEnvironments object.
+        Returns:
+            LightStructureEnvironments
         """
         structure = structure_environments.structure
         strategy.set_structure_environments(structure_environments=structure_environments)
@@ -1649,18 +1651,18 @@ class LightStructureEnvironments(MSONable):
                     valence = self.valences[isite]
                     strspecie = str(Species(sp.symbol, valence))
                     if valence < 0:
-                        specielist = self.statistics_dict["anion_list"]
+                        specie_list = self.statistics_dict["anion_list"]
                         atomlist = self.statistics_dict["anion_atom_list"]
                     elif valence > 0:
-                        specielist = self.statistics_dict["cation_list"]
+                        specie_list = self.statistics_dict["cation_list"]
                         atomlist = self.statistics_dict["cation_atom_list"]
                     else:
-                        specielist = self.statistics_dict["neutral_list"]
+                        specie_list = self.statistics_dict["neutral_list"]
                         atomlist = self.statistics_dict["neutral_atom_list"]
-                    if strspecie not in specielist:
-                        specielist[strspecie] = occ
+                    if strspecie not in specie_list:
+                        specie_list[strspecie] = occ
                     else:
-                        specielist[strspecie] += occ
+                        specie_list[strspecie] += occ
                     if sp.symbol not in atomlist:
                         atomlist[sp.symbol] = occ
                     else:
@@ -1675,8 +1677,7 @@ class LightStructureEnvironments(MSONable):
                 for ce_symbol, fraction in site_envs:
                     if fraction is None:
                         continue
-                    if ce_symbol not in count_ce:
-                        count_ce[ce_symbol] = 0.0
+                    count_ce.setdefault(ce_symbol, 0.0)
                     count_ce[ce_symbol] += fraction
                 for sp, occ in site.species.items():
                     elmt = sp.symbol
@@ -1761,8 +1762,10 @@ class LightStructureEnvironments(MSONable):
             specie: Species to get.
             ce_symbol: Symbol of the coordination environment to get.
 
-        Returns: Dictionary with the list of indices in the structure that have the given specie in the given
-            environment, their fraction and continuous symmetry measures.
+        Returns:
+            dict: Keys are 'isites', 'fractions', 'csms' which contain list of indices in the structure
+                that have the given specie in the given environment, their fraction and continuous
+                symmetry measures.
         """
         element = specie.symbol
         oxi_state = specie.oxi_state
@@ -1788,8 +1791,9 @@ class LightStructureEnvironments(MSONable):
             specie: Species to get.
             min_fraction: Minimum fraction of the coordination environment.
 
-        Returns: Dictionary with the list of coordination environments for the given species, the indices of the sites
-            in which they appear, their fractions and continuous symmetry measures.
+        Returns:
+            dict: with the list of coordination environments for the given species, the indices of the sites
+                in which they appear, their fractions and continuous symmetry measures.
         """
         allces = {}
         element = specie.symbol
@@ -1825,7 +1829,7 @@ class LightStructureEnvironments(MSONable):
             bson_compatible: Whether to make the dictionary BSON-compatible.
 
         Returns:
-            A dictionary with the requested statistics.
+            dict: with the requested statistics.
         """
         if self.statistics_dict is None:
             self.setup_statistic_lists()
@@ -1844,7 +1848,8 @@ class LightStructureEnvironments(MSONable):
         Args:
             anion_atom: Anion (e.g. O, ...). The structure could contain O2- and O- though.
 
-        Returns: True if this LightStructureEnvironments concerns a structure with only one given anion_atom.
+        Returns:
+            bool: True if this LightStructureEnvironments concerns a structure with only one given anion_atom.
         """
         return (
             len(self.statistics_dict["anion_atom_list"]) == 1 and anion_atom in self.statistics_dict["anion_atom_list"]
@@ -1857,7 +1862,8 @@ class LightStructureEnvironments(MSONable):
         Args:
             anion: Anion (e.g. O2-, ...).
 
-        Returns: True if this LightStructureEnvironments concerns a structure with only one given anion.
+        Returns:
+            bool: True if this LightStructureEnvironments concerns a structure with only one given anion.
         """
         return len(self.statistics_dict["anion_list"]) == 1 and anion in self.statistics_dict["anion_list"]
 
@@ -1869,7 +1875,8 @@ class LightStructureEnvironments(MSONable):
             isite: Index of the site.
             ce_symbol: Symbol of the coordination environment.
 
-        Returns: True if the site contains the given coordination environment.
+        Returns:
+            bool: True if the site contains the given coordination environment.
         """
         if self.coordination_environments[isite] is None:
             return False
@@ -1886,7 +1893,8 @@ class LightStructureEnvironments(MSONable):
             isite: Index of the site.
             conditions: Conditions to be checked for an environment to be "clear".
 
-        Returns: True if the site has a clear environment.
+        Returns:
+            bool: True if the site has a clear environment.
         """
         if self.coordination_environments[isite] is None:
             raise ValueError(f"Coordination environments have not been determined for site {isite}")
@@ -1940,7 +1948,8 @@ class LightStructureEnvironments(MSONable):
         Args:
             conditions: Conditions to be checked for an environment to be "clear".
 
-        Returns: Set of clear environments in this structure.
+        Returns:
+            list: Clear environments in this structure.
         """
         clear_envs_list = set()
         for isite in range(len(self.structure)):
@@ -1965,7 +1974,7 @@ class LightStructureEnvironments(MSONable):
             ce_symbol: Symbol of the coordination environment.
 
         Returns:
-            True if the coordination environment is found, False otherwise
+            bool: True if the coordination environment is found for the given atom.
         """
         for isite, site in enumerate(self.structure):
             if Element(atom_symbol) in site.species.element_composition and self.site_contains_environment(
@@ -1978,7 +1987,8 @@ class LightStructureEnvironments(MSONable):
         """
         Return the set of environments identified in this structure.
 
-        Returns: Set of environments identified in this structure.
+        Returns:
+            set: environments identified in this structure.
         """
         return {ce["ce_symbol"] for celist in self.coordination_environments if celist is not None for ce in celist}
 
@@ -1998,7 +2008,7 @@ class LightStructureEnvironments(MSONable):
             other: LightStructureEnvironments object to compare with.
 
         Returns:
-            True if both objects are equal, False otherwise.
+            bool: True if both objects are equal.
         """
         if not isinstance(other, LightStructureEnvironments):
             return NotImplemented
@@ -2291,7 +2301,7 @@ class ChemicalEnvironments(MSONable):
             atol: Absolute tolerance for the comparison of Continuous Symmetry Measures.
 
         Returns:
-            True if the two ChemicalEnvironments objects are close to each other.
+            bool: True if the two ChemicalEnvironments objects are close to each other.
         """
         if set(self.coord_geoms) != set(other.coord_geoms):
             return False
@@ -2325,7 +2335,7 @@ class ChemicalEnvironments(MSONable):
             other: ChemicalEnvironments object to compare with.
 
         Returns:
-            True if both objects are equal, False otherwise.
+            bool: True if both objects are equal.
         """
         if not isinstance(other, ChemicalEnvironments):
             return NotImplemented

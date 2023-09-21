@@ -228,7 +228,7 @@ class GaussianInput:
                         bl = parameters[0]
                         angle = parameters[1]
                         axis = [0, 1, 0]
-                        op = SymmOp.from_origin_axis_angle(coords1, axis, angle, False)
+                        op = SymmOp.from_origin_axis_angle(coords1, axis, angle)
                         coord = op.operate(coords2)
                         vec = coord - coords1
                         coord = vec * bl / np.linalg.norm(vec) + coords1
@@ -243,14 +243,14 @@ class GaussianInput:
                         v1 = coords3 - coords2
                         v2 = coords1 - coords2
                         axis = np.cross(v1, v2)
-                        op = SymmOp.from_origin_axis_angle(coords1, axis, angle, False)
+                        op = SymmOp.from_origin_axis_angle(coords1, axis, angle)
                         coord = op.operate(coords2)
                         v1 = coord - coords1
                         v2 = coords1 - coords2
                         v3 = np.cross(v1, v2)
                         adj = get_angle(v3, axis)
                         axis = coords1 - coords2
-                        op = SymmOp.from_origin_axis_angle(coords1, axis, dih - adj, False)
+                        op = SymmOp.from_origin_axis_angle(coords1, axis, dih - adj)
                         coord = op.operate(coord)
                         vec = coord - coords1
                         coord = vec * bl / np.linalg.norm(vec) + coords1
@@ -495,9 +495,7 @@ class GaussianOutput:
     """
     Parser for Gaussian output files.
 
-    .. note::
-
-        Still in early beta.
+    Note: Still in early beta.
 
     Attributes:
         structures (list[Structure]): All structures from the calculation in the standard orientation. If the

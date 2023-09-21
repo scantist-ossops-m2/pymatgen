@@ -11,6 +11,7 @@ import typing
 
 import numpy as np
 from monty.json import MSONable
+
 from pymatgen.util import coord_cython
 
 if typing.TYPE_CHECKING:
@@ -49,7 +50,7 @@ def in_coord_list(coord_list, coord, atol=1e-8):
             array.
 
     Returns:
-        True if coord is in the coord list.
+        bool: True if coord is in the coord list.
     """
     return len(find_in_coord_list(coord_list, coord, atol=atol)) > 0
 
@@ -64,7 +65,7 @@ def is_coord_subset(subset: ArrayLike, superset: ArrayLike, atol: float = 1e-8) 
         atol (float): Absolute tolerance for comparing coordinates. Defaults to 1e-8.
 
     Returns:
-        True if all of subset is in superset.
+        bool: True if all of subset is in superset.
     """
     c1 = np.array(subset)
     c2 = np.array(superset)
@@ -238,7 +239,7 @@ def in_coord_list_pbc(fcoord_list, fcoord, atol=1e-8, pbc=(True, True, True)):
             axis of the lattice.
 
     Returns:
-        True if coord is in the coord list.
+        bool: True if coord is in the coord list.
     """
     return len(find_in_coord_list_pbc(fcoord_list, fcoord, atol=atol, pbc=pbc)) > 0
 
@@ -257,7 +258,7 @@ def is_coord_subset_pbc(subset, superset, atol=1e-8, mask=None, pbc=(True, True,
             axis of the lattice.
 
     Returns:
-        True if all of subset is in superset.
+        bool: True if all of subset is in superset.
     """
     # pylint: disable=I1101
     c1 = np.array(subset, dtype=np.float64)
@@ -412,9 +413,12 @@ class Simplex(MSONable):
         return (self.bary_coords(point) >= -tolerance).all()
 
     def line_intersection(self, point1, point2, tolerance=1e-8):
-        """Computes the intersection points of a line with a simplex
+        """Computes the intersection points of a line with a simplex.
+
         Args:
-            point1, point2 ([float]): Points that determine the line.
+            point1 (Sequence[float]): 1st point to determine the line.
+            point2 (Sequence[float]): 2nd point to determine the line.
+            tolerance (float): Tolerance for checking if an intersection is in the simplex. Defaults to 1e-8.
 
         Returns:
             points where the line intersects the simplex (0, 1, or 2).

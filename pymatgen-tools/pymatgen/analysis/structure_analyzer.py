@@ -15,7 +15,6 @@ from pymatgen.core.composition import Composition
 from pymatgen.core.periodic_table import Element, Species
 from pymatgen.core.sites import PeriodicSite
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.util.num import abs_cap
 from scipy.spatial import Voronoi
 
 if TYPE_CHECKING:
@@ -166,7 +165,7 @@ class VoronoiAnalyzer:
         ax.set_yticks(pos)
         ax.set_yticklabels(labels)
         ax.set(title="Voronoi Spectra", xlabel="Count")
-        ax.grid(True)
+        ax.grid(visible=True)
         return ax
 
 
@@ -345,25 +344,24 @@ class VoronoiConnectivity:
 
 def solid_angle(center, coords):
     """
-    Helper method to calculate the solid angle of a set of coords from the
-    center.
+    Helper method to calculate the solid angle of a set of coords from the center.
 
     Args:
         center (3x1 array): Center to measure solid angle from.
         coords (Nx3 array): List of coords to determine solid angle.
 
     Returns:
-        The solid angle.
+        float: The solid angle.
     """
-    o = np.array(center)
-    r = [np.array(c) - o for c in coords]
+    origin = np.array(center)
+    r = [np.array(c) - origin for c in coords]
     r.append(r[0])
     n = [np.cross(r[i + 1], r[i]) for i in range(len(r) - 1)]
     n.append(np.cross(r[1], r[0]))
     vals = []
     for i in range(len(n) - 1):
         v = -np.dot(n[i], n[i + 1]) / (np.linalg.norm(n[i]) * np.linalg.norm(n[i + 1]))
-        vals.append(acos(abs_cap(v)))
+        vals.append(acos(np.clip(v, -1, 1)))
     phi = sum(vals)
     return phi + (3 - len(r)) * pi
 
@@ -377,8 +375,8 @@ def get_max_bond_lengths(structure, el_radius_updates=None):
         structure: (structure)
         el_radius_updates: (dict) symbol->float to update atom_ic radii
 
-    Returns: (dict) - (Element1, Element2) -> float. The two elements are
-        ordered by Z.
+    Returns:
+        dict[(Element1, Element2)], float]: The two elements are ordered by Z.
     """
     # jmc = JMolCoordFinder(el_radius_updates)
     jmnn = JmolNN(el_radius_updates=el_radius_updates)

@@ -276,7 +276,8 @@ class OptimadeRester:
         Args:
             optimade_filter: An OPTIMADE-compliant filter
 
-        Returns: Dict of Structures keyed by that database's id system
+        Returns:
+            dict[str, Structure]: keyed by that database provider's id system
         """
         all_snls = self.get_snls_with_filter(optimade_filter)
         all_structures = {}
@@ -297,7 +298,8 @@ class OptimadeRester:
             optimade_filter: An OPTIMADE-compliant filter
             additional_response_fields: Any additional fields desired from the OPTIMADE API,
 
-        Returns: Dict of Structures keyed by that database's id system
+        Returns:
+            dict[str, Structure]: keyed by that database provider's id system
         """
         all_snls = {}
 

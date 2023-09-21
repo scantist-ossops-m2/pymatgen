@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
 import spglib
+
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.operations import SymmOp
 from pymatgen.core.structure import Molecule, PeriodicSite, Structure
@@ -34,8 +35,10 @@ from pymatgen.util.due import Doi, due
 if TYPE_CHECKING:
     from pymatgen.core.periodic_table import Element, Species
     from pymatgen.core.sites import Site
+    from pymatgen.symmetry.groups import CrystalSystem
 
 logger = logging.getLogger(__name__)
+LatticeType = Literal["cubic", "hexagonal", "monoclinic", "orthorhombic", "rhombohedral", "tetragonal", "triclinic"]
 
 cite_conventional_cell_algo = due.dcite(
     Doi("10.1016/j.commatsci.2010.05.010"),
@@ -164,9 +167,7 @@ class SpacegroupAnalyzer:
             return "1"
         return spglib.get_pointgroup(rotations)[0].strip()
 
-    def get_crystal_system(
-        self,
-    ) -> Literal["triclinic", "monoclinic", "orthorhombic", "tetragonal", "trigonal", "hexagonal", "cubic"]:
+    def get_crystal_system(self) -> CrystalSystem:
         """Get the crystal system for the structure, e.g., (triclinic, orthorhombic,
         cubic, etc.).
 
@@ -196,9 +197,7 @@ class SpacegroupAnalyzer:
             return "hexagonal"
         return "cubic"
 
-    def get_lattice_type(
-        self,
-    ) -> Literal["triclinic", "monoclinic", "orthorhombic", "tetragonal", "rhombohedral", "hexagonal", "cubic"]:
+    def get_lattice_type(self) -> LatticeType:
         """Get the lattice for the structure, e.g., (triclinic, orthorhombic, cubic,
         etc.).This is the same as the crystal system with the exception of the
         hexagonal/rhombohedral lattice.
@@ -316,15 +315,15 @@ class SpacegroupAnalyzer:
         have been grouped into symmetrically equivalent groups.
 
         Returns:
-            :class:`pymatgen.symmetry.structure.SymmetrizedStructure` object.
+            pymatgen.symmetry.structure.SymmetrizedStructure object.
         """
-        ds = self.get_symmetry_dataset()
-        sg = SpacegroupOperations(
+        sym_dataset = self.get_symmetry_dataset()
+        spg_ops = SpacegroupOperations(
             self.get_space_group_symbol(),
             self.get_space_group_number(),
             self.get_symmetry_operations(),
         )
-        return SymmetrizedStructure(self._structure, sg, ds["equivalent_atoms"], ds["wyckoffs"])
+        return SymmetrizedStructure(self._structure, spg_ops, sym_dataset["equivalent_atoms"], sym_dataset["wyckoffs"])
 
     def get_refined_structure(self, keep_site_properties=False):
         """Get the refined structure based on detected symmetry. The refined structure is
@@ -1502,7 +1501,7 @@ def iterative_symmetrize(mol, max_n=10, tolerance=0.3, epsilon=1e-2):
         max_n (int): Maximum number of iterations.
         tolerance (float): Tolerance for detecting symmetry.
             Gets passed as Argument into
-            :class:`~pymatgen.analyzer.symmetry.PointGroupAnalyzer`.
+            ~pymatgen.analyzer.symmetry.PointGroupAnalyzer.
         epsilon (float): If the elementwise absolute difference of two
             subsequently symmetrized structures is smaller epsilon,
             the iteration stops before ``max_n`` is reached.
@@ -1651,11 +1650,11 @@ class SpacegroupOperations(list):
         """
 
         def in_sites(site):
-            return any(test_site.is_periodic_image(site, symm_prec, False) for test_site in sites1)
+            return any(test_site.is_periodic_image(site, symm_prec, check_lattice=False) for test_site in sites1)
 
         for op in self:
-            newsites2 = [PeriodicSite(site.species, op.operate(site.frac_coords), site.lattice) for site in sites2]
-            for site in newsites2:
+            new_sites2 = [PeriodicSite(site.species, op.operate(site.frac_coords), site.lattice) for site in sites2]
+            for site in new_sites2:
                 if not in_sites(site):
                     break
             else:

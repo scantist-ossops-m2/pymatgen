@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 from monty.json import MSONable
+
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.bandstructure import Kpoint
@@ -581,7 +582,8 @@ class PhononBandStructureSymmLine(PhononBandStructure):
         Args:
             dct: Dict representation.
 
-        Returns: PhononBandStructureSymmLine
+        Returns:
+            PhononBandStructureSymmLine
         """
         lattice_rec = Lattice(dct["lattice_rec"]["matrix"])
         eigendisplacements = (

@@ -1807,7 +1807,7 @@ class TestLobsterin(unittest.TestCase):
         lobsterin2 = Lobsterin.from_file(outfile_path)
         assert lobsterin1.diff(lobsterin2)["Different"] == {}
 
-    def test_write_INCAR(self):
+    def test_write_incar(self):
         # write INCAR and compare
         outfile_path = tempfile.mkstemp()[1]
         lobsterin1 = Lobsterin.standard_calculations_from_vasp_files(
@@ -1832,7 +1832,7 @@ class TestLobsterin(unittest.TestCase):
             "LWAVE": {"INCAR1": False, "INCAR2": True},
         }
 
-    def test_write_KPOINTS(self):
+    def test_write_kpoints(self):
         # line mode
         outfile_path = tempfile.mkstemp()[1]
         outfile_path2 = tempfile.mkstemp(prefix="POSCAR")[1]
@@ -1982,7 +1982,7 @@ class TestLobsterin(unittest.TestCase):
                 found += 1
         return found == 1
 
-    def test_MSONable_implementation(self):
+    def test_msonable_implementation(self):
         # tests as dict and from dict methods
         newLobsterin = Lobsterin.from_dict(self.Lobsterinfromfile.as_dict())
         assert newLobsterin == self.Lobsterinfromfile

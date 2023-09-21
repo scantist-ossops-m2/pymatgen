@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING, ClassVar, Literal, overload
 import numpy as np
 from monty.design_patterns import cached_class
 from monty.serialization import loadfn
+
 from pymatgen.util.string import Stringify
 
 if TYPE_CHECKING:
@@ -28,6 +29,7 @@ if TYPE_CHECKING:
 
 
 SYMM_DATA = loadfn(os.path.join(os.path.dirname(__file__), "symm_data.json"))
+CrystalSystem = Literal["cubic", "hexagonal", "monoclinic", "orthorhombic", "tetragonal", "triclinic", "trigonal"]
 
 
 class SymmetryGroup(Sequence, Stringify, metaclass=ABCMeta):
@@ -71,7 +73,7 @@ class SymmetryGroup(Sequence, Stringify, metaclass=ABCMeta):
             supergroup (SymmetryGroup): Supergroup to test.
 
         Returns:
-            True if this group is a subgroup of the supplied group.
+            bool: True if this group is a subgroup of the supplied group.
         """
         warnings.warn("This is not fully functional. Only trivial subsets are tested right now. ")
         return set(self.symmetry_ops).issubset(supergroup.symmetry_ops)
@@ -83,7 +85,7 @@ class SymmetryGroup(Sequence, Stringify, metaclass=ABCMeta):
             subgroup (SymmetryGroup): Subgroup to test.
 
         Returns:
-            True if this group is a supergroup of the supplied group.
+            bool: True if this group is a supergroup of the supplied group.
         """
         warnings.warn("This is not fully functional. Only trivial subsets are tested right now. ")
         return set(subgroup.symmetry_ops).issubset(self.symmetry_ops)
@@ -413,9 +415,7 @@ class SpaceGroup(SymmetryGroup):
         return True
 
     @property
-    def crystal_system(
-        self,
-    ) -> Literal["cubic", "hexagonal", "trigonal", "tetragonal", "orthorhombic", "monoclinic", "triclinic"]:
+    def crystal_system(self) -> CrystalSystem:
         """
         Returns:
             str: Crystal system of the space group, e.g., cubic, hexagonal, etc.
@@ -474,7 +474,7 @@ class SpaceGroup(SymmetryGroup):
             subgroup (Spacegroup): Subgroup to test.
 
         Returns:
-            True if this space group is a supergroup of the supplied group.
+            bool: True if this space group is a supergroup of the supplied group.
         """
         return subgroup.is_subgroup(self)
 

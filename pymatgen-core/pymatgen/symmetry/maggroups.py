@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.design_patterns import cached_class
+
 from pymatgen.core.operations import MagSymmOp
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.symmetry.groups import SymmetryGroup, in_array_list
@@ -331,7 +332,7 @@ class MagneticSpaceGroup(SymmetryGroup):
         """Retrieve magnetic symmetry operations of the space group.
 
         Returns:
-            List of :class:`pymatgen.core.operations.MagSymmOp`.
+            List of pymatgen.core.operations.MagSymmOp.
         """
         ops = [op_data["op"] for op_data in self._data["bns_operators"]]
 
@@ -360,7 +361,7 @@ class MagneticSpaceGroup(SymmetryGroup):
 
         Args:
             p: Point as a 3x1 array.
-            magmom: A magnetic moment, compatible with :class:`pymatgen.electronic_structure.core.Magmom`
+            magmom: A magnetic moment, compatible with pymatgen.electronic_structure.core.Magmom
             tol: Tolerance for determining if sites are the same. 1e-5 should
                 be sufficient for most purposes. Set to 0 for exact matching
                 (and also needed for symbolic orbits).

@@ -6,6 +6,7 @@ import numpy as np
 import scipy.constants as const
 from monty.dev import requires
 from monty.json import MSONable
+
 from pymatgen.core import Structure
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.units import amu_to_kg
@@ -375,7 +376,8 @@ class GruneisenPhononBandStructureSymmLine(GruneisenPhononBandStructure, PhononB
         Args:
             dct: Dict representation.
 
-        Returns: GruneisenPhononBandStructureSymmLine
+        Returns:
+            GruneisenPhononBandStructureSymmLine
         """
         lattice_rec = Lattice(dct["lattice_rec"]["matrix"])
         eigendisplacements = (

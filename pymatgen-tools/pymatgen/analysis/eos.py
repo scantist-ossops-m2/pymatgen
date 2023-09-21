@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from pymatgen.core.units import FloatWithUnit
-from pymatgen.util.plotting import add_fig_kwargs, get_ax_fig_plt, pretty_plot
+from pymatgen.util.plotting import add_fig_kwargs, get_ax_fig, pretty_plot
 from scipy.optimize import leastsq, minimize
 
 if TYPE_CHECKING:
@@ -107,7 +107,7 @@ class EOSBase(metaclass=ABCMeta):
         to the ones obtained from fitting.
 
         Args:
-             volume (list/numpy.array)
+            volume (list/numpy.array)
 
         Returns:
             numpy.array
@@ -207,7 +207,7 @@ class EOSBase(metaclass=ABCMeta):
 
         ax.plot(vfit, self.func(vfit), linestyle="dashed", color=color, label=label)
 
-        ax.grid(True)
+        ax.grid(visible=True)
         ax.set_xlabel("Volume $\\AA^3$")
         ax.set_ylabel("Energy (eV)")
         ax.legend(loc="best", shadow=True)
@@ -222,7 +222,7 @@ class EOSBase(metaclass=ABCMeta):
         Plot the equation of state on axis `ax`.
 
         Args:
-            ax: matplotlib :class:`Axes` or None if a new figure should be created.
+            ax: matplotlib Axes or None if a new figure should be created.
             fontsize: Legend fontsize.
             color (str): plot color.
             label (str): Plot label
@@ -232,7 +232,7 @@ class EOSBase(metaclass=ABCMeta):
             plt.Figure: matplotlib figure.
         """
         # pylint: disable=E1307
-        ax, fig, plt = get_ax_fig_plt(ax=ax)
+        ax, fig = get_ax_fig(ax=ax)
 
         color = kwargs.get("color", "r")
         label = kwargs.get("label", f"{type(self).__name__} fit")
@@ -256,7 +256,7 @@ class EOSBase(metaclass=ABCMeta):
 
         ax.plot(vfit, self.func(vfit), linestyle="dashed", color=color, label=label)
 
-        ax.grid(True)
+        ax.grid(visible=True)
         ax.set_xlabel("Volume $\\AA^3$")
         ax.set_ylabel("Energy (eV)")
         ax.legend(loc="best", shadow=True)
@@ -348,7 +348,7 @@ class PolynomialEOS(EOSBase):
         Do polynomial fitting and set the parameters. Uses numpy polyfit.
 
         Args:
-             order (int): order of the fit polynomial
+            order (int): order of the fit polynomial
         """
         self.eos_params = np.polyfit(self.volumes, self.energies, order)
         self._set_params()

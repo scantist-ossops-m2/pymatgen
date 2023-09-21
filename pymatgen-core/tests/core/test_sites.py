@@ -5,13 +5,14 @@ import pickle
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
+from pytest import approx
+
 from pymatgen.core.composition import Composition
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import Element, Species
 from pymatgen.core.sites import PeriodicSite, Site
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.util.testing import PymatgenTest
-from pytest import approx
 
 
 class TestSite(PymatgenTest):
@@ -250,7 +251,7 @@ def get_distance_and_image_old(site1, site2, jimage=None):
             distance and periodic lattice translations of the other site
             for which the distance applies.
 
-    .. note::
+    Note:
         Assumes the primitive cell vectors are sufficiently not skewed such
         that the condition \\|a\\|cos(ab_angle) < \\|b\\| for all possible cell
         vector pairs. ** this method does not check this condition **

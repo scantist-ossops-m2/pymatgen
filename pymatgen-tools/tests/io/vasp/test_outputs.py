@@ -4,7 +4,7 @@ import gzip
 import json
 import os
 import unittest
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 from pathlib import Path
 from shutil import copyfile, copyfileobj
 
@@ -89,7 +89,7 @@ class TestVasprun(PymatgenTest):
             Vasprun(f"{TEST_FILES_DIR}/vasprun.xml.dielectric_bad")
 
     def test_bad_vasprun(self):
-        with pytest.raises(ET.ParseError):
+        with pytest.raises(ElementTree.ParseError):
             Vasprun(f"{TEST_FILES_DIR}/bad_vasprun.xml")
 
         with pytest.warns(
@@ -431,7 +431,7 @@ class TestVasprun(PymatgenTest):
             ],
         )
 
-    def test_Xe(self):
+    def test_xe(self):
         vr = Vasprun(f"{TEST_FILES_DIR}/vasprun.xml.xe", parse_potcar_file=False)
         assert vr.atomic_symbols == ["Xe"]
 
@@ -1778,11 +1778,11 @@ class TestWavecar(PymatgenTest):
         finally:
             Wavecar._generate_G_points = temp_ggp
 
-    def test__generate_nbmax(self):
+    def test_generate_nbmax(self):
         self.w._generate_nbmax()
         assert self.w._nbmax.tolist() == [5, 5, 5]
 
-    def test__generate_G_points(self):
+    def test_generate_g_points(self):
         for k in range(self.w.nk):
             kp = self.w.kpoints[k]
             assert len(self.w._generate_G_points(kp)) <= 257

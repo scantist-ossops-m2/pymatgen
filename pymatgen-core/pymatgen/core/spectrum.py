@@ -8,9 +8,10 @@ from typing import TYPE_CHECKING, Callable, Literal
 
 import numpy as np
 from monty.json import MSONable
-from pymatgen.util.coord import get_linear_interpolated_value
 from scipy import stats
 from scipy.ndimage import convolve1d
+
+from pymatgen.util.coord import get_linear_interpolated_value
 
 if TYPE_CHECKING:
     from numpy.typing import ArrayLike
@@ -121,7 +122,7 @@ class Spectrum(MSONable):
         """Returns an interpolated y value for a particular x value.
 
         Args:
-             x: x value to return the y value for
+            x: x value to return the y value for
 
         Returns:
             Value of y at x
@@ -180,7 +181,8 @@ class Spectrum(MSONable):
     __rmul__ = __mul__
 
     def __truediv__(self, other):
-        """True division of y
+        """True division of y.
+
         Args:
             other: The divisor.
 
@@ -190,7 +192,8 @@ class Spectrum(MSONable):
         return self.__class__(self.x, self.y.__truediv__(other), *self._args, **self._kwargs)
 
     def __floordiv__(self, other):
-        """True division of y
+        """True division of y.
+
         Args:
             other: The divisor.
 

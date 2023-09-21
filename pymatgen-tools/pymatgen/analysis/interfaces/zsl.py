@@ -90,7 +90,8 @@ class ZSLGenerator(MSONable):
     ):
         """
         Initialize a Zur Super Lattice Generator for a specific film and
-            substrate
+            substrate.
+
         Args:
             max_area_ratio_tol(float): Max tolerance on ratio of
                 super-lattices to consider equal
@@ -111,7 +112,8 @@ class ZSLGenerator(MSONable):
         Generates transformation sets for film/substrate pair given the
         area of the unit cell area for the film and substrate. The
         transformation sets map the film and substrate unit cells to super
-        lattices with a maximum area
+        lattices with a maximum area.
+
         Args:
             film_area(int): the unit cell area for the film
             substrate_area(int): the unit cell area for the substrate.

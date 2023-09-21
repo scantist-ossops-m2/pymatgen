@@ -16,13 +16,14 @@ import warnings
 
 import numpy as np
 from monty.json import MSONable
+from scipy.interpolate import InterpolatedUnivariateSpline
+
 from pymatgen.core.sites import PeriodicSite
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.core import Orbital, Spin
 from pymatgen.util.coord import get_linear_interpolated_value
 from pymatgen.util.due import Doi, due
 from pymatgen.util.num import round_to_sigfigs
-from scipy.interpolate import InterpolatedUnivariateSpline
 
 __author__ = "Marco Esters, Janine George"
 __copyright__ = "Copyright 2017, The Materials Project"
@@ -1037,6 +1038,7 @@ class IcohpCollection(MSONable):
             summed_spin_channels: Boolean to indicate whether the ICOHPs/ICOOPs of both spin channels should be summed
             spin: if summed_spin_channels is equal to False, this spin indicates which spin channel should be returned
             orbitals: List of Orbital or "str(Orbital1)-str(Orbital2)"
+
         Returns:
             float describing ICOHP/ICOOP value
         """
@@ -1081,19 +1083,20 @@ class IcohpCollection(MSONable):
         return sum_icohp / divisor
 
     def get_icohp_dict_by_bondlengths(self, minbondlength=0.0, maxbondlength=8.0):
-        """Get a dict of IcohpValues corresponding to certain bond lengths
+        """Get a dict of IcohpValues corresponding to certain bond lengths.
+
         Args:
             minbondlength: defines the minimum of the bond lengths of the bonds
             maxbondlength: defines the maximum of the bond lengths of the bonds.
 
         Returns:
-             dict of IcohpValues, the keys correspond to the values from the initial list_labels.
+            dict of IcohpValues, the keys correspond to the values from the initial list_labels.
         """
-        newicohp_dict = {}
+        new_icohp_dict = {}
         for value in self._icohplist.values():
             if value._length >= minbondlength and value._length <= maxbondlength:
-                newicohp_dict[value._label] = value
-        return newicohp_dict
+                new_icohp_dict[value._label] = value
+        return new_icohp_dict
 
     def get_icohp_dict_of_site(
         self,
@@ -1119,7 +1122,7 @@ class IcohpCollection(MSONable):
         Returns:
             dict of IcohpValues, the keys correspond to the values from the initial list_labels
         """
-        newicohp_dict = {}
+        new_icohp_dict = {}
         for key, value in self._icohplist.items():
             atomnumber1 = int(re.split(r"(\d+)", value._atom1)[1]) - 1
             atomnumber2 = int(re.split(r"(\d+)", value._atom2)[1]) - 1
@@ -1136,19 +1139,20 @@ class IcohpCollection(MSONable):
                         if value.summed_icohp >= minsummedicohp:
                             if maxsummedicohp is not None:
                                 if value.summed_icohp <= maxsummedicohp:
-                                    newicohp_dict[key] = value
+                                    new_icohp_dict[key] = value
                             else:
-                                newicohp_dict[key] = value
+                                new_icohp_dict[key] = value
                     elif maxsummedicohp is not None:
                         if value.summed_icohp <= maxsummedicohp:
-                            newicohp_dict[key] = value
+                            new_icohp_dict[key] = value
                     else:
-                        newicohp_dict[key] = value
+                        new_icohp_dict[key] = value
 
-        return newicohp_dict
+        return new_icohp_dict
 
     def extremum_icohpvalue(self, summed_spin_channels=True, spin=Spin.up):
-        """Get ICOHP/ICOOP of strongest bond
+        """Get ICOHP/ICOOP of strongest bond.
+
         Args:
             summed_spin_channels: Boolean to indicate whether the ICOHPs/ICOOPs of both spin channels should be summed.
 

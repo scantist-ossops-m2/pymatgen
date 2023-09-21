@@ -392,8 +392,7 @@ def vectorsToMatrix(aa, bb):
     :param bb: Another vector of size 3.
 
     Returns:
-        A 3x3 matrix M composed of the products of the elements of aa and bb :
-     M_ij = aa_i * bb_j.
+        A 3x3 matrix M composed of the products of the elements of aa and bb : M_ij = aa_i * bb_j.
     """
     MM = np.zeros([3, 3], np.float_)
     for ii in range(3):
@@ -482,7 +481,7 @@ def collinear(p1, p2, p3=None, tolerance=0.25):
     :param tolerance: Area tolerance for the collinearity test (0.25 gives about 0.125 deviation from the line).
 
     Returns:
-        True if the three points are considered as collinear within the given tolerance, False otherwise.
+        bool: True if the three points are considered as collinear within the given tolerance.
     """
     if p3 is None:
         triangle_area = 0.5 * np.linalg.norm(np.cross(p1, p2))
@@ -502,14 +501,14 @@ def anticlockwise_sort(pps):
     Returns:
         Sorted list of points.
     """
-    newpps = []
+    new_pps = []
     angles = np.zeros(len(pps), np.float_)
     for ipp, pp in enumerate(pps):
         angles[ipp] = np.arctan2(pp[1], pp[0])
-    iisorted = np.argsort(angles)
+    idx_sorted = np.argsort(angles)
     for ii in range(len(pps)):
-        newpps.append(pps[iisorted[ii]])
-    return newpps
+        new_pps.append(pps[idx_sorted[ii]])
+    return new_pps
 
 
 def anticlockwise_sort_indices(pps):
@@ -567,7 +566,7 @@ def separation_in_list(separation_indices, separation_indices_list):
     :param separation_indices_list: list of the list of separation indices to be compared to.
 
     Returns:
-        True if the separation indices are already in the list, False otherwise.
+        bool: True if the separation indices are already in the list.
     """
     sorted_separation = sort_separation(separation_indices)
     for sep in separation_indices_list:
@@ -584,7 +583,7 @@ def is_anion_cation_bond(valences, ii, jj) -> bool:
     :param jj: index of another site.
 
     Returns:
-        True if one site is an anion and the other is a cation (from the valences).
+        bool: True if one site is an anion and the other is a cation (based on valences).
     """
     if valences == "undefined":
         return True
@@ -701,7 +700,7 @@ class Plane:
         :param dist_tolerance: tolerance on the distance to the plane within which point pp is considered in the plane.
 
         Returns:
-            True if pp is in the plane, False otherwise.
+            bool: True if pp is in the plane.
         """
         return np.abs(np.dot(self.normal_vector, pp) + self._coefficients[3]) <= dist_tolerance
 
@@ -711,7 +710,7 @@ class Plane:
         :param plane: Plane to be compared to.
 
         Returns:
-            True if the two facets are identical, False otherwise.
+            bool: True if the two facets are identical.
         """
         return np.allclose(self._coefficients, plane.coefficients)
 
@@ -721,7 +720,7 @@ class Plane:
         :param plane_list: List of Planes to be compared to.
 
         Returns:
-            True if the plane is in the list, False otherwise.
+            bool: True if the plane is in the list.
         """
         return any(self.is_same_plane_as(plane) for plane in plane_list)
 

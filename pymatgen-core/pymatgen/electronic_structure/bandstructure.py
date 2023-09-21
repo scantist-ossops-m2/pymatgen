@@ -10,6 +10,7 @@ import warnings
 
 import numpy as np
 from monty.json import MSONable
+
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.periodic_table import Element, get_el_sp
 from pymatgen.core.structure import Structure
@@ -43,7 +44,7 @@ class Kpoint(MSONable):
         """
         Args:
             coords: coordinate of the kpoint as a numpy array
-            lattice: A pymatgen.core.lattice.Lattice object representing
+            lattice: A pymatgen.core.Lattice object representing
                 the reciprocal lattice of the kpoint
             to_unit_cell: Translates fractional coordinate to the basic unit
                 cell, i.e., all fractional coordinates satisfy 0 <= a < 1.
@@ -65,7 +66,7 @@ class Kpoint(MSONable):
     @property
     def lattice(self):
         """The lattice associated with the kpoint. It's a
-        pymatgen.core.lattice.Lattice object.
+        pymatgen.core.Lattice object.
         """
         return self._lattice
 
@@ -140,7 +141,7 @@ class BandStructure:
         kpoints (list): The list of kpoints (as Kpoint objects) in the band structure.
         lattice_rec (Lattice): The reciprocal lattice of the band structure.
         efermi (float): The Fermi energy.
-        is_spin_polarized (bool): True if the band structure is spin-polarized, False otherwise.
+        is_spin_polarized (bool): True if the band structure is spin-polarized.
         bands (dict): The energy eigenvalues as a {spin: ndarray}. Note that the use of an
             ndarray is necessary for computational as well as memory efficiency due to the large
             amount of numerical data. The indices of the ndarray are [band_index, kpoint_index].
@@ -284,7 +285,7 @@ class BandStructure:
         level crosses a band.
 
         Returns:
-            True if a metal, False if not
+            bool: True if a metal.
         """
         for values in self.bands.values():
             for idx in range(self.nb_bands):
@@ -524,7 +525,8 @@ class BandStructure:
         return np.delete(points, rm_list, axis=0)
 
     def get_kpoint_degeneracy(self, kpoint, cartesian=False, tol: float = 1e-2):
-        """Returns degeneracy of a given k-point based on structure symmetry
+        """Returns degeneracy of a given k-point based on structure symmetry.
+
         Args:
             kpoint (1x3 array): coordinate of the k-point
             cartesian (bool): kpoint is in Cartesian or fractional coordinates

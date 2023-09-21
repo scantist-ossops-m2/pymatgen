@@ -16,7 +16,7 @@ from pytest import approx
 class TestVaspToComputedEntryDrone(unittest.TestCase):
     def setUp(self):
         self.drone = VaspToComputedEntryDrone(data=["efermi"])
-        self.structure_drone = VaspToComputedEntryDrone(True)
+        self.structure_drone = VaspToComputedEntryDrone(inc_structure=True)
 
     def test_get_valid_paths(self):
         for path in os.walk(TEST_FILES_DIR):
@@ -46,7 +46,7 @@ class TestVaspToComputedEntryDrone(unittest.TestCase):
 class TestSimpleVaspToComputedEntryDrone(unittest.TestCase):
     def setUp(self):
         self.drone = SimpleVaspToComputedEntryDrone()
-        self.structure_drone = SimpleVaspToComputedEntryDrone(True)
+        self.structure_drone = SimpleVaspToComputedEntryDrone(inc_structure=True)
 
     def test_get_valid_paths(self):
         for path in os.walk(TEST_FILES_DIR):
@@ -62,7 +62,7 @@ class TestSimpleVaspToComputedEntryDrone(unittest.TestCase):
 class TestGaussianToComputedEntryDrone(unittest.TestCase):
     def setUp(self):
         self.drone = GaussianToComputedEntryDrone(data=["corrections"])
-        self.structure_drone = GaussianToComputedEntryDrone(True)
+        self.structure_drone = GaussianToComputedEntryDrone(inc_structure=True)
 
     def test_get_valid_paths(self):
         for path in os.walk(f"{TEST_FILES_DIR}/molecules"):

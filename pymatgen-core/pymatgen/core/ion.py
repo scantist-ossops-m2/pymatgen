@@ -6,6 +6,7 @@ import re
 from copy import deepcopy
 
 from monty.json import MSONable
+
 from pymatgen.core.composition import Composition, reduce_formula
 from pymatgen.util.string import Stringify, charge_string, formula_double_format
 
@@ -34,6 +35,7 @@ class Ion(Composition, MSONable, Stringify):
         Also note that (aq) can be included in the formula, e.g. "NaOH (aq)".
 
         :param formula:
+
         Returns:
             Ion
         """
@@ -209,15 +211,15 @@ class Ion(Composition, MSONable, Stringify):
         return dct
 
     @classmethod
-    def from_dict(cls, d) -> Ion:
+    def from_dict(cls, dct) -> Ion:
         """Generates an ion object from a dict created by as_dict().
 
         Args:
-            d: {symbol: amount} dict.
+            dct: {symbol: amount} dict.
         """
-        input = deepcopy(d)
-        charge = input.pop("charge")
-        composition = Composition(input)
+        dct_copy = deepcopy(dct)
+        charge = dct_copy.pop("charge")
+        composition = Composition(dct_copy)
         return Ion(composition, charge)
 
     @property
@@ -310,6 +312,6 @@ class Ion(Composition, MSONable, Stringify):
     def to_pretty_string(self) -> str:
         """Pretty string with proper superscripts."""
         str_ = super().reduced_formula
-        if val := formula_double_format(self.charge, False):
+        if val := formula_double_format(self.charge, ignore_ones=False):
             str_ += f"^{val:+}"
         return str_
