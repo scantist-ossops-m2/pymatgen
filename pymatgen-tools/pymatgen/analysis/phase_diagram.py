@@ -39,7 +39,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-with open(os.path.join(os.path.dirname(__file__), "..", "util", "plotly_pd_layouts.json")) as file:
+with open(os.path.join(os.path.dirname(__file__), "plotly_pd_layouts.json")) as file:
     plotly_layouts = json.load(file)
 
 

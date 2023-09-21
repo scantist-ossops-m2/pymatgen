@@ -43,7 +43,7 @@ from scipy.spatial import ConvexHull, HalfspaceIntersection
 if TYPE_CHECKING:
     from pymatgen.entries.computed_entries import ComputedEntry
 
-with open(f"{os.path.dirname(__file__)}/../util/plotly_chempot_layouts.json") as file:
+with open(f"{os.path.dirname(__file__)}/plotly_chempot_layouts.json") as file:
     plotly_layouts = json.load(file)
 
 

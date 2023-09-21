@@ -27,7 +27,7 @@ __maintainer__ = "Matthew McDermott"
 __email__ = "mcdermott@lbl.gov"
 __date__ = "Sep 1, 2021"
 
-with open(os.path.join(os.path.dirname(__file__), "..", "util", "plotly_interface_rxn_layouts.json")) as f:
+with open(os.path.join(os.path.dirname(__file__), "plotly_interface_rxn_layouts.json")) as f:
     plotly_layouts = json.load(f)
 
 
