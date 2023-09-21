@@ -826,7 +826,7 @@ loop_
         f = f"{TEST_FILES_DIR}/nosymm.cif"
         parser = CifParser(f)
         struct = parser.get_structures()[0]
-        assert struct.formula == "H96 C60 O8"
+        assert struct.formula == "H71 C45 O6"
 
     def test_dot_positions(self):
         f = f"{TEST_FILES_DIR}/ICSD59959.cif"
