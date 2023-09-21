@@ -100,7 +100,7 @@ jobs:
           cd pymatgen-core
           python -m pip install -e '.[dev,optional]'
           cd ../pymatgen-tools
-          python -m pip install -e '.[dev,optional]'
+          python -m pip install -e .
       - name: pytest split ${{ matrix.split }}
         run: |
           pytest --splits 10 --group ${{ matrix.split }} --durations-path test_files/.pytest-split-durations pymatgen-core/tests
